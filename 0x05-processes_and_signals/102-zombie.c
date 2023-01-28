@@ -14,7 +14,7 @@
  *
  * Return: Always 0.
  */
-int infinitewhile(void)
+int infinite_while(void)
 {
 	while (1)
 	{
@@ -38,7 +38,7 @@ int main(void)
 		pid = fork();
 		if (pid > 0)
 		{
-			printf("Zombie process created, PID: %d\n, pid");
+			printf("Zombie process created, PID: %d\n", pid);
 			sleep(1);
 			count++;
 		}
