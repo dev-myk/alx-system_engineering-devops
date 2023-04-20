@@ -1,25 +1,17 @@
-# Installs a Nginx server with custom HTTP header
-
-exec { 'update':
-  provider => shell,
-  command  => 'sudo apt-get -y update',
-  before   => Exec['install Nginx'],
+# Installs a Nginx server with custom HTTP response headers
+exec { '/usr/bin/env apt-get -y update' : }
+-> package { 'nginx':
+  ensure => installed,
 }
-
-exec { 'install Nginx':
-  provider => shell,
-  command  => 'sudo apt-get -y install nginx',
-  before   => Exec['restart Nginx'],
+-> file { '/var/www/html/index.html':
+  content => 'Holberton School',
 }
-
-exec { 'restart Nginx':
-  provider => shell,
-  environment => ["HOST=${hostname}"],
-  command     => 'sudo sed -i "s/include \/etc\/nginx\/sites-enabled\/\*;/include \/etc\/nginx\/sites-enabled\/\*;\n\tadd_header X-Served-By \"$HOST\";/" /etc/nginx/nginx.conf',
-  before   => Exec['restart Nginx']
+-> file_line { 'add header' :
+  ensure => present,
+  path   => '/etc/nginx/sites-available/default',
+  line   => "\tadd_header X-Served-By ${hostname};",
+  after  => 'server_name _;',
 }
-
-exec { 'restart Nginx':
-  provider => shell,
-  command  => 'sudo service nginx restart',
+-> service { 'nginx':
+  ensure => running,
 }
