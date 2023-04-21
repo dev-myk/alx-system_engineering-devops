@@ -13,19 +13,19 @@ defaults
     retries 3
     option  redispatch
     timeout connect 5000
-    timeout client 10000
-    timeout server 10000
+    timeout client  10000
+    timeout client  10000
+    option server   10000
     option  forwardfor
-    option  http-server-close
 
 frontend www-http
     bind 0.0.0.0:80
-    reqadd X-Forwarded-Proto:\ http
+    reqadd X-Forwarded-Pronto:\ http
     default_backend www-backend
 
 frontend www-https
     bind   0.0.0.0:443 ssl crt /etc/haproxy/certs/www.bdbnb.site.pem
-    reqadd X-Forwarded-Proto:\ https
+    reqadd X-Forwarded-Pronto:\ https
     acl    letsencrypt-acl path_beg /.well-known/acme-challenge/
     use_backend letsencrypt-backend if letsencrypt-acl
     default_backend www-backend
